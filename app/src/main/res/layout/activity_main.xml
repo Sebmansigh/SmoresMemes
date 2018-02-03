@@ -6,13 +6,72 @@
     android:layout_height="match_parent"
     tools:context="com.cs316.smoresmemes.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="307dp"
+        android:layout_height="292dp"
+        android:layout_marginBottom="203dp"
+        android:layout_marginTop="16dp"
+        android:contentDescription="imageView"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:color/holo_green_dark" />
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="0dp"
+        android:layout_height="45dp"
+        android:layout_marginBottom="294dp"
+        android:layout_marginTop="16dp"
+        android:contentDescription="discard"
+        app:layout_constraintBottom_toTopOf="@+id/imageButton4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/btn_dialog" />
+
+    <ImageButton
+        android:id="@+id/imageButton2"
+        android:layout_width="160dp"
+        android:layout_height="55dp"
+        android:layout_marginBottom="24dp"
+        android:layout_marginEnd="200dp"
+        android:layout_marginStart="38dp"
+        android:layout_marginTop="46dp"
+        android:contentDescription="take photo"
+        app:layout_constraintBottom_toTopOf="@+id/imageButton5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:srcCompat="@android:drawable/ic_menu_camera" />
+
+    <ImageButton
+        android:id="@+id/imageButton4"
+        android:layout_width="160dp"
+        android:layout_height="55dp"
+        android:layout_marginBottom="24dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginTop="47dp"
+        android:contentDescription="add @android:string/paste_as_plain_text"
+        app:layout_constraintBottom_toTopOf="@+id/imageButton5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageButton2"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:srcCompat="@drawable/txt2" />
+
+    <ImageButton
+        android:id="@+id/imageButton5"
+        android:layout_width="154dp"
+        android:layout_height="39dp"
+        android:layout_marginBottom="38dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="24dp"
+        android:contentDescription="save image"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageButton2"
+        app:srcCompat="@android:drawable/sym_contact_card" />
 
 </android.support.constraint.ConstraintLayout>
