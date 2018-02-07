@@ -29,37 +29,33 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         //*/
-        /*
         final Map<String,String> Data = new HashMap<>();
-        Data.put("path","pathnameLOL");
+        Data.put("path", "IcanHAZmemes!");
 
         Runnable c = new Runnable() {
             @Override
             public void run() {
                 String X = MyHTTP.POST("postmeme",Data);
-                System.out.print("RESULTS: ");
-                System.out.println(X);
             }
         };
         //*/
-        /*
-        final Map<String,String> Data = new HashMap<>();
-        Data.put("id","2");
+        final Map<String, String> Data2 = new HashMap<>();
+        Data2.put("id", "19");
 
-        Runnable c = new Runnable() {
+        Runnable d = new Runnable() {
             @Override
+
             public void run() {
-                String X = MyHTTP.POST("getmeme",Data);
-                System.out.print("RESULTS: ");
+                String X = MyHTTP.POST("getmeme", Data2);
+                System.out.print("Meme obtained:");
                 System.out.println(X);
             }
         };
         //*/
 
-        /*
         //To test the queries, uncomment one of the above comments and this one.
         System.out.println("RUNNING!");
         new Thread(c).start();
-        //*/
+        new Thread(d).start();
     }
 }
