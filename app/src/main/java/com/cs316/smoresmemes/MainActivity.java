@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println(X);
             }
         };
-        //*/
+        /*
         final Map<String,String> Data = new HashMap<>();
         Data.put("path", "IcanHAZmemes!");
 
@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
                 String X = MyHTTP.POST("postmeme",Data);
             }
         };
-        //*/
+        /*
         final Map<String, String> Data2 = new HashMap<>();
         Data2.put("id", "19");
 
@@ -54,8 +54,10 @@ public class MainActivity extends AppCompatActivity {
         //*/
 
         //To test the queries, uncomment one of the above comments and this one.
+        /*
         System.out.println("RUNNING!");
         new Thread(c).start();
         new Thread(d).start();
+        */
     }
 }
