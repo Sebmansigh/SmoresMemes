@@ -84,9 +84,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode,int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
-        Bitmap bitmap = (Bitmap)data.getExtras().get("data");
-        ImageView photoView = (ImageView)findViewById(R.id.imageView);
-        System.out.println("PV: "+photoView);
-        photoView.setImageBitmap(bitmap);
+        if (data != null && data.hasExtra("data")) {
+            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+            ImageView photoView = (ImageView) findViewById(R.id.imageView);
+            System.out.println("PV: " + photoView);
+            photoView.setImageBitmap(bitmap);
+        }
     }
 }
