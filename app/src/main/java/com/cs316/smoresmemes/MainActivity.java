@@ -2,6 +2,7 @@ package com.cs316.smoresmemes;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +22,8 @@ public class MainActivity extends AppCompatActivity {
     ImageView photoView;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -28,8 +31,10 @@ public class MainActivity extends AppCompatActivity {
         ImageView photoView = (ImageView)findViewById(R.id.imageView);
         System.out.println("PV: "+photoView);
 
-        btnCamera.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
+        btnCamera.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View view)
+            {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(intent,0);
             }
@@ -40,11 +45,9 @@ public class MainActivity extends AppCompatActivity {
         Data.put("arg2","Words");
         Data.put("arg3","?%=!");
         Data.put("arg4","WordsAgain!");
-        Runnable c = new Runnable()
-        {
+        Runnable c = new Runnable() {
             @Override
-            public void run()
-            {
+            public void run() {
                 String X = MyHTTP.POST("test",Data);
                 System.out.print("RESULTS: ");
                 System.out.println(X);
@@ -54,11 +57,9 @@ public class MainActivity extends AppCompatActivity {
         final Map<String,String> Data = new HashMap<>();
         Data.put("path", "IcanHAZmemes!");
 
-        Runnable c = new Runnable()
-        {
+        Runnable c = new Runnable() {
             @Override
-            public void run()
-            {
+            public void run() {
                 String X = MyHTTP.POST("postmeme",Data);
             }
         };
@@ -66,11 +67,10 @@ public class MainActivity extends AppCompatActivity {
         final Map<String, String> Data2 = new HashMap<>();
         Data2.put("id", "19");
 
-        Runnable d = new Runnable()
-        {
+        Runnable d = new Runnable() {
             @Override
-            public void run()
-            {
+
+            public void run() {
                 String X = MyHTTP.POST("getmeme", Data2);
                 System.out.print("Meme obtained:");
                 System.out.println(X);
@@ -87,13 +87,31 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode,int resultCode, Intent data)
+    {
         super.onActivityResult(requestCode, resultCode, data);
-        if (data != null && data.hasExtra("data")) {
+        if (data != null && data.hasExtra("data"))
+        {
             Bitmap bitmap = (Bitmap) data.getExtras().get("data");
             ImageView photoView = (ImageView) findViewById(R.id.imageView);
-            System.out.println("PV: " + photoView);
+
+            System.out.println("Width: "+ bitmap.getWidth());
+            System.out.println("Height: "+ bitmap.getHeight());
+
+            ImageHandler.WriteImage(bitmap,new File(context.getFilesDir(),"TestImage.jpg").getAbsolutePath());
+
+            final int TARGET_WIDTH = 300, TARGET_HEIGHT = 240;
+
+            int targetX = Math.max(0,bitmap.getWidth()/2-TARGET_WIDTH/2);
+            int targetY = Math.max(0,bitmap.getHeight()/2-TARGET_HEIGHT/2);
+            int targetW = Math.min(bitmap.getWidth(),TARGET_WIDTH);
+            int targetH = Math.min(bitmap.getHeight(),TARGET_HEIGHT);
+
+            bitmap = ImageHandler.cropImage(bitmap, targetX,targetY,targetW,targetH);
             photoView.setImageBitmap(bitmap);
+            System.out.println("Width: "+ bitmap.getWidth());
+            System.out.println("Height: "+ bitmap.getHeight());
         }
     }
+
 }
