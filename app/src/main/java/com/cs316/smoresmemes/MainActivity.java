@@ -28,8 +28,8 @@ public class MainActivity extends AppCompatActivity {
         ImageView photoView = (ImageView)findViewById(R.id.imageView);
         System.out.println("PV: "+photoView);
 
-        btnCamera.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View view){
+        btnCamera.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(intent,0);
             }
@@ -40,9 +40,11 @@ public class MainActivity extends AppCompatActivity {
         Data.put("arg2","Words");
         Data.put("arg3","?%=!");
         Data.put("arg4","WordsAgain!");
-        Runnable c = new Runnable() {
+        Runnable c = new Runnable()
+        {
             @Override
-            public void run() {
+            public void run()
+            {
                 String X = MyHTTP.POST("test",Data);
                 System.out.print("RESULTS: ");
                 System.out.println(X);
@@ -52,9 +54,11 @@ public class MainActivity extends AppCompatActivity {
         final Map<String,String> Data = new HashMap<>();
         Data.put("path", "IcanHAZmemes!");
 
-        Runnable c = new Runnable() {
+        Runnable c = new Runnable()
+        {
             @Override
-            public void run() {
+            public void run()
+            {
                 String X = MyHTTP.POST("postmeme",Data);
             }
         };
@@ -62,10 +66,11 @@ public class MainActivity extends AppCompatActivity {
         final Map<String, String> Data2 = new HashMap<>();
         Data2.put("id", "19");
 
-        Runnable d = new Runnable() {
+        Runnable d = new Runnable()
+        {
             @Override
-
-            public void run() {
+            public void run()
+            {
                 String X = MyHTTP.POST("getmeme", Data2);
                 System.out.print("Meme obtained:");
                 System.out.println(X);
@@ -82,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode,int resultCode, Intent data){
+    protected void onActivityResult(int requestCode, int resultCode, Intent data {
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null && data.hasExtra("data")) {
             Bitmap bitmap = (Bitmap) data.getExtras().get("data");
