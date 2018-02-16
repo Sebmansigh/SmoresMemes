@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.Image;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -89,10 +90,10 @@ public class MainActivity extends AppCompatActivity {
         //*/
         //*
         final Map<String,String> Data = new HashMap<>();
-        Data.put("imageData", "IcanHAZmemes!");
-        Data.put("imageFormat", "IcanHAZmemes!");
-        Data.put("imageWidth", "IcanHAZmemes!");
-        Data.put("imageHeight", "IcanHAZmemes!");
+        Data.put("imageData", ImageMod.getBitmapByteString(((BitmapDrawable) (photoView.getDrawable())).getBitmap()));
+        Data.put("imageFormat", "JPG");
+        Data.put("imageWidth", "300");
+        Data.put("imageHeight", "240");
 
         Runnable c = new Runnable()
         {
@@ -100,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
             public void run()
             {
                 String X = MyHTTP.POST("postmeme",Data);
+                System.out.println("Results: " + X);
             }
         };
 
