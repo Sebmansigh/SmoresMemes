@@ -34,19 +34,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.644"
-        app:srcCompat="@android:color/holo_green_dark" />
+        app:srcCompat="@drawable/smoredefault" />
 
     <ImageButton
         android:id="@+id/imageButton"
-        android:layout_width="0dp"
-        android:layout_height="45dp"
+        android:layout_width="41dp"
+        android:layout_height="44dp"
         android:layout_marginBottom="294dp"
         android:layout_marginTop="16dp"
         android:contentDescription="discard"
         app:layout_constraintBottom_toTopOf="@+id/imageButton4"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/imageView"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@android:drawable/btn_dialog" />
 
     <ImageButton
@@ -55,7 +57,7 @@
         android:layout_height="55dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="32dp"
         android:contentDescription="take photo"
         app:layout_constraintEnd_toStartOf="@+id/imageButton4"
         app:layout_constraintHorizontal_bias="0.0"
@@ -67,8 +69,8 @@
         android:id="@+id/imageButton4"
         android:layout_width="147dp"
         android:layout_height="55dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="32dp"
         android:contentDescription="add @android:string/paste_as_plain_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView5"
