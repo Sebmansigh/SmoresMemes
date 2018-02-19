@@ -22,13 +22,23 @@ public final class MyHTTP {
 
     public static String Encode(String data) {
         return data.replace("!", "%21")
+                .replace("#", "%23")
+                .replace("$", "%24")
                 .replace("&", "%26")
                 .replace("'", "%27")
+                .replace("(", "%28")
+                .replace(")", "%29")
+                .replace("*", "%2A")
+                .replace("+", "%2B")
+                .replace(",", "%2C")
                 .replace("/", "%2F")
                 .replace(":", "%3A")
+                .replace(";", "%3B")
                 .replace("=", "%3D")
-                .replace("?", "%3F");
-
+                .replace("?", "%3F")
+                .replace("@", "%40")
+                .replace("[", "%5B")
+                .replace("]", "%5D");
     }
 
     /*!	#	$	&	'	(	)	*	+	,	/	:	;	=	?	@	[	]
@@ -47,6 +57,9 @@ public final class MyHTTP {
             connection.setDoOutput(true);
             connection.setRequestMethod("POST");
             connection.connect();
+
+            System.out.println("Connected.");
+
             OutputStreamWriter wr = new OutputStreamWriter(connection.getOutputStream());
             for (Map.Entry<String, String> arg : args.entrySet()) {
                 String qstr = Encode(arg.getKey()) + "=" + Encode(arg.getValue()) + "&";
@@ -55,15 +68,37 @@ public final class MyHTTP {
             wr.flush();
             wr.close();
 
-            BufferedReader rd = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String content = "", line;
-            while ((line = rd.readLine()) != null) {
-                content += line + "\n";
-            }
+            System.out.println("Pushed args.");
+            try {
+                BufferedReader rd = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String content = "", line;
+                while ((line = rd.readLine()) != null) {
+                    content += line + "\n";
+                }
 
-            return content;
+                System.out.println("Acquired content.");
+
+                return content;
+            } catch (Exception e) {
+                BufferedReader rd = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
+                String error = "", line;
+                while ((line = rd.readLine()) != null) {
+                    error += line + "\n";
+                }
+
+                System.out.println("Acquired error");
+
+                throw new PHPErrorException(error);
+            }
         } catch (Exception e) {
+
             return e.getClass().getName() + "2: " + e.getMessage();
         }
     }
 }
+
+class PHPErrorException extends Exception {
+    public PHPErrorException(String Message) {
+        super(Message);
+    }
+};
