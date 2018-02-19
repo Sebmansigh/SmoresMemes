@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/SmoresMemes.iml" filepath="$PROJECT_DIR$/SmoresMemes.iml" />
+      <module fileurl="file://C:\Users\samue\Desktop\Class\CS\316_Advanced_Mobile\SmoresMemes\SmoresMemes.iml" filepath="C:\Users\samue\Desktop\Class\CS\316_Advanced_Mobile\SmoresMemes\SmoresMemes.iml" />
+      <module fileurl="file://C:\Adv_Mobile_Dev\SmoresMemes\.idea\SmoresMemes.iml" filepath="C:\Adv_Mobile_Dev\SmoresMemes\.idea\SmoresMemes.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
