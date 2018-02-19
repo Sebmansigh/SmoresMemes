@@ -21,7 +21,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.013"
-        app:srcCompat="@drawable/smoredefault" />
+        app:srcCompat="@drawable/smorememedefaultpicture" />
 
     <ImageView
         android:id="@+id/imageView3"
@@ -88,9 +88,10 @@
         app:srcCompat="@android:drawable/bottom_bar" />
 
     <ImageButton
-        android:id="@+id/imageButton6"
-        android:layout_width="61dp"
-        android:layout_height="66dp"
+        android:id="@+id/imageButton3"
+        android:layout_width="64dp"
+        android:layout_height="68dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:background="@null"
