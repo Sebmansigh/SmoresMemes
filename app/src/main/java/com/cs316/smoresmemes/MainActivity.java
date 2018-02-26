@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Bitmap ImageBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.smoredefault);
+        Bitmap ImageBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.smoreplushy);
         final byte[] compare = ImageMod.getBitmapByteArray(ImageBitmap);
         final String BitmapString = new String(Base64.encode(compare, Base64.DEFAULT));
         /*

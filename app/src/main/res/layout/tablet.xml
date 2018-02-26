@@ -21,7 +21,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.013"
-        app:srcCompat="@drawable/smoredefault" />
+        app:srcCompat="@drawable/smoreplushy" />
 
     <ImageView
         android:id="@+id/imageView3"
