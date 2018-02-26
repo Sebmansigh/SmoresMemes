@@ -1,5 +1,7 @@
 package com.cs316.smoresmemes;
 
+import android.util.Base64;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -10,6 +12,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 /**
@@ -21,7 +24,10 @@ public final class MyHTTP {
     }
 
     public static String Encode(String data) {
-        return data.replace("!", "%21")
+
+        return data
+                .replace("%", "%25") //Encode % First.
+                .replace("!", "%21")
                 .replace("#", "%23")
                 .replace("$", "%24")
                 .replace("&", "%26")
@@ -38,8 +44,11 @@ public final class MyHTTP {
                 .replace("?", "%3F")
                 .replace("@", "%40")
                 .replace("[", "%5B")
-                .replace("]", "%5D");
+                .replace("]", "%5D")
+                .replace(new String(new char[]{(char) 10}), "%0A") //Encode LF
+                .replace(new String(new char[]{(char) 13}), "%0D"); //Encode CR
     }
+
 
     /*!	#	$	&	'	(	)	*	+	,	/	:	;	=	?	@	[	]
     %21	%23	%24	%26	%27	%28	%29	%2A	%2B	%2C	%2F	%3A	%3B	%3D	%3F	%40	%5B	%5D

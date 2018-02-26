@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.database.DatabaseErrorHandler;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -13,6 +14,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -73,28 +75,57 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(galleryIntent, 1);
             }
         });
+
+        Bitmap ImageBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.smoreplushy);
+        final byte[] compare = ImageMod.getBitmapByteArray(ImageBitmap);
+        final String BitmapString = new String(Base64.encode(compare, Base64.DEFAULT));
+        /*
+        //BitmapString = BitmapString.substring(0,1000);
+        System.out.println("SENDING STRING (LENGTH "+BitmapString.length()+"):");
+        System.out.println(BitmapString);
+        final byte[] internalcompare = Base64.decode(Base64.encode(compare,Base64.DEFAULT),Base64.DEFAULT);
+        System.out.println(compare.equals(internalcompare));
+        if(!internalcompare.equals(compare))
+        {
+            System.out.println("Mismatches:");
+            int maxI = Math.min(internalcompare.length,compare.length);
+            for(int i = 0;i < maxI;i++)
+            {
+                if(internalcompare[i] != compare[i]) {
+                    System.out.println("At index i=" + i + ":  " + internalcompare[i] + " != " + compare[i]);
+                }
+            }
+        }
+        */
         /*
         final Map<String,String> Data = new HashMap<>();
-        Data.put("arg1","?%=!");
-        Data.put("arg2","Words");
-        Data.put("arg3","?%=!");
-        Data.put("arg4","WordsAgain!");
-        Runnable c = new Runnable()
-        {
+        Data.put("Test",BitmapString);
+        final ImageView FinalView = photoView;
+        Runnable b = new Runnable() {
             @Override
-            public void run()
-            {
-                String X = MyHTTP.POST("test",Data);
-                System.out.print("RESULTS: ");
-                System.out.println(X);
+            public void run() {
+                final String X = MyHTTP.POST("echoback", Data);
+                //System.out.println("Meme obtained:");
+                //System.out.println(X);
+                //System.out.println(" --VS--");
+                //System.out.println(BitmapString);
+                runOnUiThread(new Runnable() //run on ui thread
+                {
+                    public void run() {
+                        byte[] DataBytes = Base64.decode(X.trim(),Base64.DEFAULT);
+                        Bitmap FromData = BitmapFactory.decodeByteArray(DataBytes, 0, DataBytes.length);
+                        FinalView.setImageBitmap(FromData);
+                        System.out.println("I DID IT!");
+
+                    }
+                });
             }
         };
+        Thread tb = new Thread(b);
+        tb.start();
         //*/
         /*
         final Map<String,String> Data = new HashMap<>();
-        Bitmap ImageBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.smoredefault);
-        final byte[] compare = ImageMod.getBitmapByteArray(ImageBitmap);
-        final String BitmapString = ImageMod.getBitmapByteString(ImageBitmap);
         Data.put("imageData", BitmapString);
         Data.put("imageFormat", "JPG");
         Data.put("imageWidth", Integer.toString(ImageBitmap.getWidth()));
@@ -106,37 +137,41 @@ public class MainActivity extends AppCompatActivity {
             public void run()
             {
                 String X = MyHTTP.POST("postmeme",Data);
-                System.out.println("Results: " + X.trim().length() + " vs " + BitmapString.trim().length());
+                //System.out.println("Results: " + X.trim().length() + " vs " + BitmapString.trim().length());
+                System.out.println("LENGTH: "+X);
             }
         };
 
         Thread t = new Thread(c);
         t.start();
         //*/
-        ///*
-        Bitmap ImageBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.smoredefault);
-        final byte[] compare = ImageMod.getBitmapByteArray(ImageBitmap);
-        final String BitmapString = ImageMod.getBitmapByteString(ImageBitmap);
+        //*
         //*/
-
+        //*
         final Map<String, String> Data2 = new HashMap<>();
-        Data2.put("id", "54");
+        Data2.put("id", "65");
         final ImageView FinalView = photoView;
         Runnable d = new Runnable() {
             @Override
             public void run() {
                 final String X = MyHTTP.POST("getmeme", Data2);
-                System.out.println("Meme obtained:");
-                System.out.println(X);
-                System.out.println(" --VS--");
-                System.out.println(BitmapString);
+                //System.out.println("Meme obtained:");
+                //System.out.println(X);
+                //System.out.println(" --VS--");
+                //System.out.println(BitmapString);
                 runOnUiThread(new Runnable() //run on ui thread
                 {
                     public void run() {
-                        byte[] DataBytes = X.trim().getBytes(StandardCharsets.UTF_8);
-                        System.out.println(DataBytes.length + " vs " + compare.length);
-                        byte[] ToConvert = DataBytes;
-                        Bitmap FromData = BitmapFactory.decodeByteArray(ToConvert, 0, ToConvert.length);
+                        byte[] DataBytes = Base64.decode(X.trim(), Base64.DEFAULT);
+                        /*
+                        System.out.println(Arrays.toString(a));
+                        System.out.println("RECEIVING STRING ("+X.length()+"):");
+                        System.out.println(Arrays.toString(compare));
+                        byte[] DataBytes = X.substring(0,X.length()-1).getBytes(StandardCharsets.UTF_8);
+
+                        System.out.println(a.length + " vs " + compare.length);
+                        */
+                        Bitmap FromData = BitmapFactory.decodeByteArray(DataBytes, 0, DataBytes.length);
                         FinalView.setImageBitmap(FromData);
                         System.out.println("I DID IT!");
 

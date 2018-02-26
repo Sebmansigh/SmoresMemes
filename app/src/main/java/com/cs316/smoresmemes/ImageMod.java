@@ -15,7 +15,14 @@ final class ImageMod {
     }
 
     public static String getBitmapByteString(Bitmap B) {
-        return new String(getBitmapByteArray(B), StandardCharsets.UTF_8);
+        byte[] Bytes = getBitmapByteArray(B);
+        //System.out.println("ByteArraySize:"+Bytes.length);
+        String RetStr = "";
+        for (byte b : Bytes) {
+            RetStr += (char) b;
+        }
+        //System.out.println("ByteStringSize:"+RetStr.length());
+        return RetStr;
     }
 
     public static byte[] getBitmapByteArray(Bitmap B) {
@@ -23,5 +30,13 @@ final class ImageMod {
         ByteArrayOutputStream o = new ByteArrayOutputStream();
         B.compress(Bitmap.CompressFormat.JPEG, 0, o);
         return o.toByteArray();
+    }
+
+    public static byte[] convertByteStringToArray(String S) {
+        byte[] RetArr = new byte[S.length()];
+        for (int i = 0; i < RetArr.length; i++) {
+            RetArr[i] = (byte) S.charAt(i);
+        }
+        return RetArr;
     }
 }
