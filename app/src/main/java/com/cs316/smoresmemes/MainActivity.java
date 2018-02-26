@@ -7,6 +7,10 @@ import android.database.Cursor;
 import android.database.DatabaseErrorHandler;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
@@ -17,6 +21,7 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -30,16 +35,57 @@ public class MainActivity extends AppCompatActivity {
 
     ImageView photoView;
     private static int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
+    EditText ET1;
+    EditText ET2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        final EditText ET1 = (EditText) findViewById(R.id.editText);
+        final EditText ET2 = (EditText) findViewById(R.id.editText2);
+        ET1.setDrawingCacheEnabled(true);
+        ET2.setDrawingCacheEnabled(true);
+
         MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
         ImageButton btnCamera = (ImageButton) findViewById(R.id.imageButton2);
-        ImageView photoView = (ImageView)findViewById(R.id.imageView);
+        final ImageView photoView = (ImageView)findViewById(R.id.imageView);
+        ImageButton textBtn = (ImageButton) findViewById(R.id.imageButton4);
         System.out.println("PV: "+photoView);
+        Button Cnvrt = (Button) findViewById(R.id.button2);
+
+        Cnvrt.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view){
+                final int FONT_SIZE = 100;
+
+                Bitmap myBitmap = ((BitmapDrawable)photoView.getDrawable()).getBitmap();
+                myBitmap = myBitmap.copy(myBitmap.getConfig(),true);
+                //Bitmap myBitmap = Bitmap.createBitmap(photoView.getWidth(), photoView.getHeight(), Bitmap.Config.ARGB_8888);
+                String TopText = ET1.getText().toString();
+                String BtmText = ET2.getText().toString();
+
+                Canvas canvas = new Canvas(myBitmap);
+                // new antialised Paint
+                Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+                // text color - #3D3D3D
+                paint.setColor(Color.rgb(255, 255, 255));
+                // text size in pixels
+                paint.setTextSize(FONT_SIZE);
+                // text shadow
+                paint.setShadowLayer(40f, 0f, 1f, Color.BLACK);
+
+                // draw text to the Canvas center
+                Rect bounds = new Rect();
+                paint.getTextBounds(TopText, 0, TopText.length(), bounds);
+                int x = (myBitmap.getWidth() - bounds.width())/2;
+                int y = FONT_SIZE+10;
+
+                canvas.drawText(TopText, x, y, paint);
+
+                photoView.setImageBitmap(myBitmap);
+            }
+        });
 
         btnCamera.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -75,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(galleryIntent, 1);
             }
         });
+
 
         Bitmap ImageBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.smoreplushy);
         final byte[] compare = ImageMod.getBitmapByteArray(ImageBitmap);
@@ -182,6 +229,7 @@ public class MainActivity extends AppCompatActivity {
         new Thread(d).start();
         //*/
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
