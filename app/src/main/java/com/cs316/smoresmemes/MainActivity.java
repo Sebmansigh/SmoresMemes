@@ -85,14 +85,18 @@ public class MainActivity extends AppCompatActivity {
                 canvas.drawText(TopText, x, y, paint);
 
                 // Bottom Text
+                paint.getTextBounds(BtmText, 0, BtmText.length(), bounds);
+                int x2 = (myBitmap.getWidth() - bounds.width())/2;
+                int y2 = myBitmap.getHeight() - y/2;
+
                 paint.setStyle(Paint.Style.STROKE);
                 paint.setStrokeWidth(24);
                 paint.setColor(Color.BLACK);
-                canvas.drawText(BtmText, x, 580, paint);
+                canvas.drawText(BtmText, x2, y2, paint);
 
                 paint.setStyle(Paint.Style.FILL);
                 paint.setColor(Color.WHITE);
-                canvas.drawText(BtmText, x, 580, paint);
+                canvas.drawText(BtmText, x2, y2, paint);
 
                 photoView.setImageBitmap(myBitmap);
             }
