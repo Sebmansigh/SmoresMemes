@@ -117,6 +117,18 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(galleryIntent, 1);
             }
         });
+
+        ImageButton saveImage = (ImageButton) findViewById(R.id.imageButton4);
+
+        saveImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bitmap FinalImage = ImageMod.applyText(BaseImage.Bitmap,"TestTop","TestBtm",getApplicationContext());
+                String ImagePath = MediaStore.Images.Media.insertImage(getContentResolver(),FinalImage,"generatedMeme","meme");
+                System.out.println(ImagePath);
+            }
+        });
+
         /*
         final Map<String,String> Data = new HashMap<>();
         Data.put("imageData", BitmapString);
