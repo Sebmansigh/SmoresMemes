@@ -63,49 +63,13 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                final int FONT_SIZE = 100;
+                final int FONT_SIZE = 80;
 
                 Bitmap myBitmap = BaseImage.Bitmap;
-                myBitmap = myBitmap.copy(myBitmap.getConfig(),true);
                 String TopText = ET1.getText().toString();
                 String BtmText = ET2.getText().toString();
 
-                Canvas canvas = new Canvas(myBitmap);
-                // new antialised Paint
-                Paint paint = new Paint();
-                Typeface T = ResourcesCompat.getFont(getApplicationContext(), R.font.impact);
-                paint.setTypeface(T);
-                paint.setStyle(Paint.Style.STROKE);
-                paint.setStrokeWidth(24);
-                paint.setColor(Color.BLACK);
-                paint.setTextSize(FONT_SIZE);
-                paint.setShadowLayer(40f, 0f, 1f, Color.BLACK);
-
-                // draw text to the Canvas center
-                Rect bounds = new Rect();
-                paint.getTextBounds(TopText, 0, TopText.length(), bounds);
-                int x = (myBitmap.getWidth() - bounds.width())/2;
-                int y = FONT_SIZE;
-
-                canvas.drawText(TopText, x, y, paint);
-
-                paint.setStyle(Paint.Style.FILL);
-                paint.setColor(Color.WHITE);
-                canvas.drawText(TopText, x, y, paint);
-
-                // Bottom Text
-                paint.getTextBounds(BtmText, 0, BtmText.length(), bounds);
-                int x2 = (myBitmap.getWidth() - bounds.width())/2;
-                int y2 = myBitmap.getHeight() - y/2;
-
-                paint.setStyle(Paint.Style.STROKE);
-                paint.setStrokeWidth(24);
-                paint.setColor(Color.BLACK);
-                canvas.drawText(BtmText, x2, y2, paint);
-
-                paint.setStyle(Paint.Style.FILL);
-                paint.setColor(Color.WHITE);
-                canvas.drawText(BtmText, x2, y2, paint);
+                myBitmap = ImageMod.applyText(myBitmap, TopText, BtmText, getApplicationContext());
 
                 photoView.setImageBitmap(myBitmap);
             }
