@@ -11,6 +11,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
@@ -67,12 +68,13 @@ public class MainActivity extends AppCompatActivity {
 
                 Canvas canvas = new Canvas(myBitmap);
                 // new antialised Paint
-                Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-                // text color - #3D3D3D
-                paint.setColor(Color.rgb(255, 255, 255));
-                // text size in pixels
+                Paint paint = new Paint();
+                Typeface T = Typeface.create("Impact", Typeface.BOLD);
+                paint.setTypeface(T);
+                paint.setStyle(Paint.Style.STROKE);
+                paint.setStrokeWidth(24);
+                paint.setColor(Color.BLACK);
                 paint.setTextSize(FONT_SIZE);
-                // text shadow
                 paint.setShadowLayer(40f, 0f, 1f, Color.BLACK);
 
                 // draw text to the Canvas center
@@ -83,6 +85,9 @@ public class MainActivity extends AppCompatActivity {
 
                 canvas.drawText(TopText, x, y, paint);
 
+                paint.setStyle(Paint.Style.FILL);
+                paint.setColor(Color.WHITE);
+                canvas.drawText(TopText, x, y, paint);
                 photoView.setImageBitmap(myBitmap);
             }
         });
@@ -121,56 +126,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(galleryIntent, 1);
             }
         });
-
-
-        Bitmap ImageBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.smoreplushy);
-        final byte[] compare = ImageMod.getBitmapByteArray(ImageBitmap);
-        final String BitmapString = new String(Base64.encode(compare, Base64.DEFAULT));
-        /*
-        //BitmapString = BitmapString.substring(0,1000);
-        System.out.println("SENDING STRING (LENGTH "+BitmapString.length()+"):");
-        System.out.println(BitmapString);
-        final byte[] internalcompare = Base64.decode(Base64.encode(compare,Base64.DEFAULT),Base64.DEFAULT);
-        System.out.println(compare.equals(internalcompare));
-        if(!internalcompare.equals(compare))
-        {
-            System.out.println("Mismatches:");
-            int maxI = Math.min(internalcompare.length,compare.length);
-            for(int i = 0;i < maxI;i++)
-            {
-                if(internalcompare[i] != compare[i]) {
-                    System.out.println("At index i=" + i + ":  " + internalcompare[i] + " != " + compare[i]);
-                }
-            }
-        }
-        */
-        /*
-        final Map<String,String> Data = new HashMap<>();
-        Data.put("Test",BitmapString);
-        final ImageView FinalView = photoView;
-        Runnable b = new Runnable() {
-            @Override
-            public void run() {
-                final String X = MyHTTP.POST("echoback", Data);
-                //System.out.println("Meme obtained:");
-                //System.out.println(X);
-                //System.out.println(" --VS--");
-                //System.out.println(BitmapString);
-                runOnUiThread(new Runnable() //run on ui thread
-                {
-                    public void run() {
-                        byte[] DataBytes = Base64.decode(X.trim(),Base64.DEFAULT);
-                        Bitmap FromData = BitmapFactory.decodeByteArray(DataBytes, 0, DataBytes.length);
-                        FinalView.setImageBitmap(FromData);
-                        System.out.println("I DID IT!");
-
-                    }
-                });
-            }
-        };
-        Thread tb = new Thread(b);
-        tb.start();
-        //*/
         /*
         final Map<String,String> Data = new HashMap<>();
         Data.put("imageData", BitmapString);
@@ -192,9 +147,6 @@ public class MainActivity extends AppCompatActivity {
         Thread t = new Thread(c);
         t.start();
         //*/
-        //*
-        //*/
-        //*
         final Map<String, String> Data2 = new HashMap<>();
         Data2.put("id", "65");
         final ImageView FinalView = photoView;
@@ -202,22 +154,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 final String X = MyHTTP.POST("getmeme", Data2);
-                //System.out.println("Meme obtained:");
-                //System.out.println(X);
-                //System.out.println(" --VS--");
-                //System.out.println(BitmapString);
                 runOnUiThread(new Runnable() //run on ui thread
                 {
                     public void run() {
                         byte[] DataBytes = Base64.decode(X.trim(), Base64.DEFAULT);
-                        /*
-                        System.out.println(Arrays.toString(a));
-                        System.out.println("RECEIVING STRING ("+X.length()+"):");
-                        System.out.println(Arrays.toString(compare));
-                        byte[] DataBytes = X.substring(0,X.length()-1).getBytes(StandardCharsets.UTF_8);
-
-                        System.out.println(a.length + " vs " + compare.length);
-                        */
                         Bitmap FromData = BitmapFactory.decodeByteArray(DataBytes, 0, DataBytes.length);
                         FinalView.setImageBitmap(FromData);
                         System.out.println("I DID IT!");
