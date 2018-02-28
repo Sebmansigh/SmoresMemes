@@ -34,10 +34,7 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    ImageView photoView;
     private static int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
-    EditText ET1;
-    EditText ET2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,14 +43,11 @@ public class MainActivity extends AppCompatActivity {
 
         final EditText ET1 = (EditText) findViewById(R.id.editText);
         final EditText ET2 = (EditText) findViewById(R.id.editText2);
-        ET1.setDrawingCacheEnabled(true);
-        ET2.setDrawingCacheEnabled(true);
 
         MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
         ImageButton btnCamera = (ImageButton) findViewById(R.id.imageButton2);
         final ImageView photoView = (ImageView)findViewById(R.id.imageView);
         ImageButton textBtn = (ImageButton) findViewById(R.id.imageButton4);
-        System.out.println("PV: "+photoView);
         Button Cnvrt = (Button) findViewById(R.id.button2);
 
         Cnvrt.setOnClickListener(new View.OnClickListener() {
@@ -62,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
 
                 Bitmap myBitmap = ((BitmapDrawable)photoView.getDrawable()).getBitmap();
                 myBitmap = myBitmap.copy(myBitmap.getConfig(),true);
-                //Bitmap myBitmap = Bitmap.createBitmap(photoView.getWidth(), photoView.getHeight(), Bitmap.Config.ARGB_8888);
                 String TopText = ET1.getText().toString();
                 String BtmText = ET2.getText().toString();
 
@@ -81,13 +74,24 @@ public class MainActivity extends AppCompatActivity {
                 Rect bounds = new Rect();
                 paint.getTextBounds(TopText, 0, TopText.length(), bounds);
                 int x = (myBitmap.getWidth() - bounds.width())/2;
-                int y = FONT_SIZE+10;
+                int y = FONT_SIZE;
 
                 canvas.drawText(TopText, x, y, paint);
 
                 paint.setStyle(Paint.Style.FILL);
                 paint.setColor(Color.WHITE);
                 canvas.drawText(TopText, x, y, paint);
+
+                // Bottom Text
+                paint.setStyle(Paint.Style.STROKE);
+                paint.setStrokeWidth(24);
+                paint.setColor(Color.BLACK);
+                canvas.drawText(BtmText, x, 580, paint);
+
+                paint.setStyle(Paint.Style.FILL);
+                paint.setColor(Color.WHITE);
+                canvas.drawText(BtmText, x, 580, paint);
+
                 photoView.setImageBitmap(myBitmap);
             }
         });
