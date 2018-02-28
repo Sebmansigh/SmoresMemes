@@ -21,6 +21,8 @@ import android.provider.MediaStore;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
@@ -38,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
 
     private static int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
 
+    final BitmapRef BaseImage = new BitmapRef();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,13 +54,18 @@ public class MainActivity extends AppCompatActivity {
         ImageButton btnCamera = (ImageButton) findViewById(R.id.imageButton2);
         final ImageView photoView = (ImageView)findViewById(R.id.imageView);
         ImageButton textBtn = (ImageButton) findViewById(R.id.imageButton4);
-        Button Cnvrt = (Button) findViewById(R.id.button2);
 
-        Cnvrt.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view){
+        TextWatcher T = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 final int FONT_SIZE = 100;
 
-                Bitmap myBitmap = ((BitmapDrawable)photoView.getDrawable()).getBitmap();
+                Bitmap myBitmap = BaseImage.Bitmap;
                 myBitmap = myBitmap.copy(myBitmap.getConfig(),true);
                 String TopText = ET1.getText().toString();
                 String BtmText = ET2.getText().toString();
@@ -100,7 +109,16 @@ public class MainActivity extends AppCompatActivity {
 
                 photoView.setImageBitmap(myBitmap);
             }
-        });
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        };
+
+        ET1.addTextChangedListener(T);
+        ET2.addTextChangedListener(T);
+
 
         btnCamera.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -114,8 +132,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //confirm that we have permissions to access photos
                 if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-                        != PackageManager.PERMISSION_GRANTED)
-                {
+                        != PackageManager.PERMISSION_GRANTED) {
                     // Should we show an explanation for why we need these permissions?
                     //if (shouldShowRequestPermissionRationale(
                     //        Manifest.permission.READ_EXTERNAL_STORAGE)) {
@@ -170,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
                         byte[] DataBytes = Base64.decode(X.trim(), Base64.DEFAULT);
                         Bitmap FromData = BitmapFactory.decodeByteArray(DataBytes, 0, DataBytes.length);
                         FinalView.setImageBitmap(FromData);
-                        System.out.println("I DID IT!");
+                        BaseImage.Bitmap = FromData;
 
                     }
                 });
@@ -184,8 +201,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 && resultCode == RESULT_OK && null != data)
-        {
+        if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
             Uri selectedImage = data.getData();
             String[] filePathColumn = { MediaStore.Images.Media.DATA };
 
@@ -200,17 +216,21 @@ public class MainActivity extends AppCompatActivity {
             ImageView imgView = (ImageView) findViewById(R.id.imageView);
 
             // Set the Image in ImageView after decoding the String
-            imgView.setImageBitmap(BitmapFactory.decodeFile(imgDecodableString));
-        }
-        else if (requestCode == 1)
-        {
+            Bitmap FromString = BitmapFactory.decodeFile(imgDecodableString);
+            BaseImage.Bitmap = FromString;
+            imgView.setImageBitmap(FromString);
+        } else if (requestCode == 1) {
             Toast.makeText(this, "You haven't picked Image", Toast.LENGTH_LONG).show();
         }
         if (data != null && data.hasExtra("data")) {
             Bitmap bitmap = (Bitmap) data.getExtras().get("data");
             ImageView photoView = (ImageView) findViewById(R.id.imageView);
-            System.out.println("PV: " + photoView);
+            BaseImage.Bitmap = bitmap;
             photoView.setImageBitmap(bitmap);
         }
+    }
+
+    private class BitmapRef {
+        public Bitmap Bitmap;
     }
 }
