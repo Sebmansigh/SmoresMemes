@@ -38,7 +38,8 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
+    private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
+    private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 2;
 
     final BitmapRef BaseImage = new BitmapRef();
 
@@ -50,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
         final EditText ET1 = (EditText) findViewById(R.id.editText);
         final EditText ET2 = (EditText) findViewById(R.id.editText2);
 
-        MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
         ImageButton btnCamera = (ImageButton) findViewById(R.id.imageButton2);
         final ImageView photoView = (ImageView)findViewById(R.id.imageView);
         ImageButton textBtn = (ImageButton) findViewById(R.id.imageButton4);
@@ -123,6 +123,21 @@ public class MainActivity extends AppCompatActivity {
         saveImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+
+                    // Should we show an explanation?
+                    if (shouldShowRequestPermissionRationale(
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                        // Explain to the user why we need to read the contacts
+                    }
+
+                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+
+
+                    return;
+                }
                 Bitmap FinalImage = ImageMod.applyText(BaseImage.Bitmap,"TestTop","TestBtm",getApplicationContext());
                 String ImagePath = MediaStore.Images.Media.insertImage(getContentResolver(),FinalImage,"generatedMeme","meme");
                 System.out.println(ImagePath);
