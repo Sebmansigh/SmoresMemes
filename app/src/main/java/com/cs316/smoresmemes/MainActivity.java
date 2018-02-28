@@ -3,6 +3,7 @@ package com.cs316.smoresmemes;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.DatabaseErrorHandler;
 import android.graphics.Bitmap;
@@ -17,6 +18,7 @@ import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
@@ -69,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
                 Canvas canvas = new Canvas(myBitmap);
                 // new antialised Paint
                 Paint paint = new Paint();
-                Typeface T = Typeface.create("Impact", Typeface.BOLD);
+                Typeface T = ResourcesCompat.getFont(getApplicationContext(), R.font.impact);
                 paint.setTypeface(T);
                 paint.setStyle(Paint.Style.STROKE);
                 paint.setStrokeWidth(24);
