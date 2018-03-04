@@ -48,9 +48,9 @@ final class ImageMod {
     }
 
     public static Bitmap applyText(Bitmap myBitmap, String TopText, String BtmText, Context c) {
-        final int FONT_SIZE = 100;
 
         myBitmap = myBitmap.copy(myBitmap.getConfig(), true);
+        final int FONT_SIZE = myBitmap.getHeight() / 8;
         Canvas canvas = new Canvas(myBitmap);
         // new antialised Paint
         Paint paint = new Paint();

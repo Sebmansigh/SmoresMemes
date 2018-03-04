@@ -63,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                final int FONT_SIZE = 80;
 
                 Bitmap myBitmap = BaseImage.Bitmap;
                 String TopText = ET1.getText().toString();
