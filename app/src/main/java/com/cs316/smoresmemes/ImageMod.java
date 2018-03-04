@@ -90,4 +90,8 @@ final class ImageMod {
 
         return myBitmap;
     }
+
+    private void PostFullMeme() {
+
+    }
 }

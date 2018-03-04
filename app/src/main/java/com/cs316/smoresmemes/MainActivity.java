@@ -3,38 +3,21 @@ package com.cs316.smoresmemes;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.database.Cursor;
-import android.database.DatabaseErrorHandler;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Base64;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
-
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,11 +32,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         final EditText ET1 = (EditText) findViewById(R.id.editText);
-        final EditText ET2 = (EditText) findViewById(R.id.editText2);
+        final EditText ET2 = (EditText) findViewById(R.id.bottomText);
 
-        ImageButton btnCamera = (ImageButton) findViewById(R.id.imageButton2);
-        final ImageView photoView = (ImageView)findViewById(R.id.imageView);
-        ImageButton textBtn = (ImageButton) findViewById(R.id.imageButton4);
+        ImageButton btnCamera = (ImageButton) findViewById(R.id.takePhotoButton);
+        final ImageView photoView = (ImageView) findViewById(R.id.memeView);
+        BaseImage.Bitmap = ((BitmapDrawable) photoView.getDrawable()).getBitmap();
 
         TextWatcher T = new TextWatcher() {
             @Override
@@ -63,14 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                Bitmap myBitmap = BaseImage.Bitmap;
-                String TopText = ET1.getText().toString();
-                String BtmText = ET2.getText().toString();
-
-                myBitmap = ImageMod.applyText(myBitmap, TopText, BtmText, getApplicationContext());
-
-                photoView.setImageBitmap(myBitmap);
+                ApplyTextAndDisplay();
             }
 
             @Override
@@ -90,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ImageButton btnGallery = (ImageButton) findViewById(R.id.button_gallery);
+        ImageButton btnGallery = (ImageButton) findViewById(R.id.galleryButton);
         btnGallery.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 //confirm that we have permissions to access photos
@@ -117,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ImageButton saveImage = (ImageButton) findViewById(R.id.imageButton4);
+        ImageButton saveImage = (ImageButton) findViewById(R.id.saveButton);
 
         saveImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -164,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
         Thread t = new Thread(c);
         t.start();
         //*/
+        /*
         final Map<String, String> Data2 = new HashMap<>();
         Data2.put("id", "65");
         final ImageView FinalView = photoView;
@@ -178,13 +155,29 @@ public class MainActivity extends AppCompatActivity {
                         Bitmap FromData = BitmapFactory.decodeByteArray(DataBytes, 0, DataBytes.length);
                         FinalView.setImageBitmap(FromData);
                         BaseImage.Bitmap = FromData;
+                        ApplyTextAndDisplay();
 
                     }
                 });
             }
         };
         new Thread(d).start();
+        */
         //*/
+    }
+
+    private void ApplyTextAndDisplay() {
+        final ImageView photoView = (ImageView) findViewById(R.id.memeView);
+        final EditText ET1 = (EditText) findViewById(R.id.editText);
+        final EditText ET2 = (EditText) findViewById(R.id.bottomText);
+        Bitmap myBitmap = BaseImage.Bitmap;
+
+        String TopText = ET1.getText().toString();
+        String BtmText = ET2.getText().toString();
+
+        myBitmap = ImageMod.applyText(myBitmap, TopText, BtmText, getApplicationContext());
+
+        photoView.setImageBitmap(myBitmap);
     }
 
 
@@ -203,20 +196,20 @@ public class MainActivity extends AppCompatActivity {
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             String imgDecodableString = cursor.getString(columnIndex);
             cursor.close();
-            ImageView imgView = (ImageView) findViewById(R.id.imageView);
+            ImageView imgView = (ImageView) findViewById(R.id.memeView);
 
             // Set the Image in ImageView after decoding the String
             Bitmap FromString = BitmapFactory.decodeFile(imgDecodableString);
             BaseImage.Bitmap = FromString;
-            imgView.setImageBitmap(FromString);
+            ApplyTextAndDisplay();
         } else if (requestCode == 1) {
             Toast.makeText(this, "You haven't picked Image", Toast.LENGTH_LONG).show();
         }
         if (data != null && data.hasExtra("data")) {
             Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-            ImageView photoView = (ImageView) findViewById(R.id.imageView);
+            ImageView photoView = (ImageView) findViewById(R.id.memeView);
             BaseImage.Bitmap = bitmap;
-            photoView.setImageBitmap(bitmap);
+            ApplyTextAndDisplay();
         }
     }
 

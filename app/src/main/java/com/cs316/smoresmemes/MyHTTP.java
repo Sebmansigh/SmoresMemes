@@ -67,17 +67,14 @@ public final class MyHTTP {
             connection.setRequestMethod("POST");
             connection.connect();
 
-            System.out.println("Connected.");
-
             OutputStreamWriter wr = new OutputStreamWriter(connection.getOutputStream());
             for (Map.Entry<String, String> arg : args.entrySet()) {
-                String qstr = Encode(arg.getKey()) + "=" + Encode(arg.getValue()) + "&";
-                wr.write(qstr);
+                String qStr = Encode(arg.getKey()) + "=" + Encode(arg.getValue()) + "&";
+                wr.write(qStr);
             }
             wr.flush();
             wr.close();
 
-            System.out.println("Pushed args.");
             try {
                 BufferedReader rd = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                 String content = "", line;
@@ -85,7 +82,6 @@ public final class MyHTTP {
                     content += line + "\n";
                 }
 
-                System.out.println("Acquired content.");
 
                 return content;
             } catch (Exception e) {
@@ -95,7 +91,6 @@ public final class MyHTTP {
                     error += line + "\n";
                 }
 
-                System.out.println("Acquired error");
 
                 throw new PHPErrorException(error);
             }
