@@ -25,13 +25,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ImageListActivity extends AppCompatActivity {
-    public static final String FETCH_RESULT = "com.cs316.smoresmemes.FETCHRESULT";
 
     private final StrongReference<String> FetchMethod = new StrongReference<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_list);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
         // Get the Intent that started this activity and extract the string
         Intent intent = getIntent();
         String[] fetchData = intent.getStringExtra(CODES.FETCH_METHOD).split(" ");
@@ -133,7 +138,7 @@ public class ImageListActivity extends AppCompatActivity {
                         }
                         default: {
                             Y = "ERROR!";
-                    }
+                        }
                     }
                     runOnUiThread(new Runnable() //run on ui thread
                     {
@@ -155,7 +160,7 @@ public class ImageListActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         Intent resultIntent = new Intent();
-                        resultIntent.putExtra(FETCH_RESULT, InDataBytes.get());
+                        resultIntent.putExtra(CODES.FETCH_RESULT, InDataBytes.get());
                         setResult(RESULT_OK, resultIntent);
                         finish();
                     }
