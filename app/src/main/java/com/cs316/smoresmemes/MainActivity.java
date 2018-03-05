@@ -18,13 +18,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
-<<<<<<< Updated upstream
-=======
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
->>>>>>> Stashed changes
 
 public class MainActivity extends AppCompatActivity {
 
