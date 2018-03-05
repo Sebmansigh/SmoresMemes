@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
             }
             case CODES.GET_DATABASE_BASE_IMAGE: {
                 if (resultCode == RESULT_OK && data != null) {
-                    byte[] DataBytes = (byte[]) data.getExtras().get(ImageListActivity.FETCH_RESULT);
+                    byte[] DataBytes = (byte[]) data.getExtras().get(CODES.FETCH_RESULT);
                     Bitmap bitmap = BitmapFactory.decodeByteArray(DataBytes, 0, DataBytes.length);
                     ImageView photoView = (ImageView) findViewById(R.id.memeView);
                     BaseImage.set(bitmap);

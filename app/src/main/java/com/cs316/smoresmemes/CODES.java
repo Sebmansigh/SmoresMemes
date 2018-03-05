@@ -11,6 +11,7 @@ final class CODES {
     static final int GET_DATABASE_BASE_IMAGE = 300;
 
     static final String FETCH_METHOD = "com.cs316.smoresmemes.FETCHMETHOD";
+    static final String FETCH_RESULT = "com.cs316.smoresmemes.FETCHRESULT";
 
     private CODES() {
     }
