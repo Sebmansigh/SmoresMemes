@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         ImageButton btnDownload = (ImageButton) findViewById(R.id.downloadBaseButton);
         ImageButton btnGallery = (ImageButton) findViewById(R.id.galleryButton);
         ImageButton btnSave = (ImageButton) findViewById(R.id.saveButton);
+        ImageButton btnShare = (ImageButton) findViewById(R.id.shareButton);
         final ImageView photoView = (ImageView) findViewById(R.id.memeView);
         BaseImage.Bitmap = ((BitmapDrawable) photoView.getDrawable()).getBitmap();
 
