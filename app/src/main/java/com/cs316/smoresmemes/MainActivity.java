@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        final Toast IfSuccessful = Toast.makeText(this, "Meme Genereated!", Toast.LENGTH_LONG);
+        final Toast IfSuccessful = Toast.makeText(this, "Meme Genereted!", Toast.LENGTH_LONG);
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
