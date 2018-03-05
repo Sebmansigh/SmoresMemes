@@ -91,43 +91,6 @@ public class ImageListActivity extends AppCompatActivity {
             InImage.setId(InImageId);
             InLayout.addView(InImage);
 
-
-            final Map<String, String> InData = new HashMap<>();
-            InData.put("id", IDStr);
-
-            final StrongReference<byte[]> InDataBytes = new StrongReference<>();
-            final StrongReference<String> InString = new StrongReference<>();
-
-            Runnable InR = new Runnable() {
-                @Override
-                public void run() {
-                    String X = null;
-                    if (method.equals("base")) {
-                        X = MyHTTP.POST("getBaseMemeImage", InData);
-                    } else if (method.equals("full")) {
-                        X = MyHTTP.POST("getFullMemeImage", InData);
-                    }
-                    byte[] DataBytes = Base64.decode(X.trim(), Base64.DEFAULT);
-                    final Bitmap FromData = BitmapFactory.decodeByteArray(DataBytes, 0, DataBytes.length);
-                    runOnUiThread(new Runnable() //run on ui thread
-                    {
-                        public void run() {
-                            InImage.setImageBitmap(FromData);
-                        }
-                    });
-                    if (method.equals("base")) {
-                        X = MyHTTP.POST("getBaseMemeDescription", InData);
-                    } else if (method.equals("full")) {
-                        X = "Uploaded by: " + MyHTTP.POST("getFullMemeUploadedBy", InData);
-                    }
-                    InString.set(X);
-                    InDataBytes.set(DataBytes);
-                }
-            };
-
-            Thread InThread = new Thread(InR);
-            InThread.start();
-
             final TextView InText = new TextView(this);
             InText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
             final LinearLayout.LayoutParams InTextParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -140,12 +103,52 @@ public class ImageListActivity extends AppCompatActivity {
 
             OuterLayout.addView(InLayout);
 
-            //set.applyTo(InLayout);
-            try {
-                InThread.join();
-            } catch (InterruptedException e) {
-            }
-            InText.setText(InString.get());
+
+            final Map<String, String> InData = new HashMap<>();
+            InData.put("id", IDStr);
+
+            final StrongReference<byte[]> InDataBytes = new StrongReference<>();
+
+            Runnable InR = new Runnable() {
+                @Override
+                public void run() {
+                    String X = null;
+                    if (method.equals("base")) {
+                        X = MyHTTP.POST("getBaseMemeImage", InData);
+                    } else if (method.equals("full")) {
+                        X = MyHTTP.POST("getFullMemeImage", InData);
+                    }
+                    byte[] DataBytes = Base64.decode(X.trim(), Base64.DEFAULT);
+                    final Bitmap FromData = BitmapFactory.decodeByteArray(DataBytes, 0, DataBytes.length);
+
+                    final String Y;
+                    switch (method) {
+                        case "base": {
+                            Y = MyHTTP.POST("getBaseMemeDescription", InData);
+                            break;
+                        }
+                        case "full": {
+                            Y = "Uploaded by: " + MyHTTP.POST("getFullMemeUploadedBy", InData);
+                            break;
+                        }
+                        default: {
+                            Y = "ERROR!";
+                    }
+                    }
+                    runOnUiThread(new Runnable() //run on ui thread
+                    {
+                        public void run() {
+                            InImage.setImageBitmap(FromData);
+                            InText.setText(Y);
+                        }
+                    });
+                    InDataBytes.set(DataBytes);
+                }
+            };
+
+            Thread InThread = new Thread(InR);
+            InThread.start();
+
 
             if (method.equals("base")) {
                 InLayout.setOnClickListener(new View.OnClickListener() {
