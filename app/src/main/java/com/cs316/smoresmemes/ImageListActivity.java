@@ -1,12 +1,15 @@
 package com.cs316.smoresmemes;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
+import android.provider.MediaStore;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.v7.app.AlertDialog;
@@ -14,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Base64;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -89,6 +93,7 @@ public class ImageListActivity extends AppCompatActivity {
             ConstraintSet set = new ConstraintSet();
             int InLayoutID = View.generateViewId();
             InLayout.setId(InLayoutID);
+            InLayout.setGravity(Gravity.CENTER_VERTICAL);
 
             final ImageView InImage = new ImageView(this);
             final LinearLayout.LayoutParams InImageParams = new LinearLayout.LayoutParams(300, 200);
@@ -135,10 +140,12 @@ public class ImageListActivity extends AppCompatActivity {
             InThread.start();
 
             final TextView InText = new TextView(this);
+            InText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
             final LinearLayout.LayoutParams InTextParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            InText.setPadding(16, 0, 16, 0);
 
-            InText.setGravity(Gravity.CENTER_VERTICAL);
             int InTextId = View.generateViewId();
+
             InText.setId(InTextId);
             InLayout.addView(InText);
 
@@ -179,7 +186,24 @@ public class ImageListActivity extends AppCompatActivity {
                         builder.setPositiveButton("Download", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                //UploadBaseImage(B, input.getText().toString());
+                                if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                                        != PackageManager.PERMISSION_GRANTED) {
+
+                                    // Should we show an explanation?
+                                    if (shouldShowRequestPermissionRationale(
+                                            Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                                        // Explain to the user why we need to read the contacts
+                                    }
+
+                                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                            CODES.PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+
+
+                                    return;
+                                }
+                                Bitmap B = BitmapFactory.decodeByteArray(InDataBytes.get(), 0, InDataBytes.get().length);
+                                String ImagePath = MediaStore.Images.Media.insertImage(getContentResolver(), B, "generatedMeme", "meme");
+                                System.out.println(ImagePath);
                                 IfSuccessful.show();
                             }
                         });
