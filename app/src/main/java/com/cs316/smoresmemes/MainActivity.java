@@ -112,7 +112,9 @@ public class MainActivity extends AppCompatActivity {
 
                     return;
                 }
-                Bitmap FinalImage = ImageMod.applyText(BaseImage.Bitmap,"TestTop","TestBtm",getApplicationContext());
+                final EditText ET1 = (EditText) findViewById(R.id.topText);
+                final EditText ET2 = (EditText) findViewById(R.id.bottomText);
+                Bitmap FinalImage = ImageMod.applyText(BaseImage.Bitmap, ET1.getText().toString(), ET2.getText().toString(), getApplicationContext());
                 String ImagePath = MediaStore.Images.Media.insertImage(getContentResolver(),FinalImage,"generatedMeme","meme");
                 System.out.println(ImagePath);
             }
