@@ -8,10 +8,8 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.support.v4.content.res.ResourcesCompat;
-import android.widget.ImageView;
 
 import java.io.ByteArrayOutputStream;
-import java.nio.charset.StandardCharsets;
 
 /**
  * Created by sebmansigh on 2/16/18.

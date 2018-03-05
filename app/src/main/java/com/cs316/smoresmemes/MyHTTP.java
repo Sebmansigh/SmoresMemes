@@ -1,25 +1,14 @@
 package com.cs316.smoresmemes;
 
-import android.util.Base64;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
-/**
- * Created by sebmansigh on 2/5/18.
- */
-
-public final class MyHTTP {
+final class MyHTTP {
     private MyHTTP() {
     }
 
@@ -54,7 +43,7 @@ public final class MyHTTP {
     %21	%23	%24	%26	%27	%28	%29	%2A	%2B	%2C	%2F	%3A	%3B	%3D	%3F	%40	%5B	%5D
     */
     public static String POST(String task, Map<String, String> args) {
-        URL url = null;
+        URL url;
         try {
             url = new URL("http://cs316smoresmemes.online/" + task + ".php");
         } catch (MalformedURLException e) {
@@ -77,22 +66,25 @@ public final class MyHTTP {
 
             try {
                 BufferedReader rd = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                String content = "", line;
+                StringBuilder content = new StringBuilder();
+                String line;
                 while ((line = rd.readLine()) != null) {
-                    content += line + "\n";
+                    content.append(line);
+                    content.append("\n");
                 }
 
 
-                return content;
+                return content.toString();
             } catch (Exception e) {
                 BufferedReader rd = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
-                String error = "", line;
+                StringBuilder error = new StringBuilder();
+                String line;
                 while ((line = rd.readLine()) != null) {
-                    error += line + "\n";
+                    error.append(line);
+                    error.append("\n");
                 }
 
-
-                throw new PHPErrorException(error);
+                throw new PHPErrorException(error.toString());
             } finally {
                 connection.disconnect();
             }
@@ -107,4 +99,4 @@ class PHPErrorException extends Exception {
     public PHPErrorException(String Message) {
         super(Message);
     }
-};
+}
