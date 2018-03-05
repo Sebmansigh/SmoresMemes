@@ -2,9 +2,38 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="#263238"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.cs316.smoresmemes.MainActivity">
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="1317dp"
+        android:layout_height="81dp"
+        android:layout_marginBottom="1dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.511"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/bottomText"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@color/colorPrimaryDark" />
+
+    <ImageButton
+        android:id="@+id/downloadBaseButton"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="#ff000d"
+        android:contentDescription="download base image"
+        app:layout_constraintEnd_toStartOf="@+id/takePhotoButton"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/takePhotoButton"
+        app:srcCompat="@drawable/download" />
 
     <ImageButton
         android:id="@+id/takePhotoButton"
@@ -12,46 +41,39 @@
         android:layout_height="80dp"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
+        android:background="#ff000d"
         android:contentDescription="take photo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/galleryButton"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/downloadBaseButton"
         app:layout_constraintTop_toBottomOf="@+id/bottomText"
-        app:srcCompat="@android:drawable/ic_menu_camera" />
-
-    <ImageButton
-        android:id="@+id/downloadBaseButton"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:contentDescription="download base image"
-        app:layout_constraintEnd_toStartOf="@+id/takePhotoButton"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/takePhotoButton"
-        app:srcCompat="@android:drawable/arrow_down_float" />
+        app:layout_constraintVertical_bias="0.625"
+        app:srcCompat="@drawable/camera" />
 
     <ImageButton
         android:id="@+id/galleryButton"
         android:layout_width="80dp"
         android:layout_height="80dp"
+        android:background="#ff000d"
         android:contentDescription="pick base image"
         app:layout_constraintEnd_toStartOf="@+id/saveButton"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/takePhotoButton"
         app:layout_constraintTop_toTopOf="@+id/takePhotoButton"
-        app:srcCompat="@android:drawable/sym_contact_card" />
+        app:srcCompat="@drawable/gallery" />
 
     <ImageButton
         android:id="@+id/saveButton"
         android:layout_width="80dp"
         android:layout_height="80dp"
+        android:background="#ff000d"
         android:contentDescription="save meme"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/galleryButton"
         app:layout_constraintTop_toTopOf="@+id/takePhotoButton"
-        app:srcCompat="@android:drawable/ic_menu_save" />
+        app:srcCompat="@drawable/save" />
 
     <ImageView
         android:id="@+id/memeView"
@@ -75,10 +97,12 @@
         android:layout_marginRight="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
+        android:backgroundTint="@android:color/white"
         android:ems="10"
         android:hint="Enter Top Text"
         android:inputType="text"
-        android:textColor="@android:color/black"
+        android:textColorHint="@android:color/white"
+        android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintRight_toRightOf="parent"
@@ -92,10 +116,12 @@
         android:layout_marginBottom="80dp"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
+        android:backgroundTint="@android:color/white"
         android:ems="10"
         android:hint="Enter Bottom Text"
+        android:textColorHint="@android:color/white"
         android:inputType="text"
-        android:textColor="@android:color/black"
+        android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

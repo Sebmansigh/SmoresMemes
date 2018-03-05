@@ -18,6 +18,13 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
+<<<<<<< Updated upstream
+=======
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+>>>>>>> Stashed changes
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final EditText ET1 = (EditText) findViewById(R.id.editText);
+        final EditText ET1 = (EditText) findViewById(R.id.topText);
         final EditText ET2 = (EditText) findViewById(R.id.bottomText);
 
         ImageButton btnCamera = (ImageButton) findViewById(R.id.takePhotoButton);
@@ -168,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void ApplyTextAndDisplay() {
         final ImageView photoView = (ImageView) findViewById(R.id.memeView);
-        final EditText ET1 = (EditText) findViewById(R.id.editText);
+        final EditText ET1 = (EditText) findViewById(R.id.topText);
         final EditText ET2 = (EditText) findViewById(R.id.bottomText);
         Bitmap myBitmap = BaseImage.Bitmap;
 
