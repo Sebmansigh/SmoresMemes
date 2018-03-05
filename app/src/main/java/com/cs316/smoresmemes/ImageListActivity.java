@@ -94,6 +94,7 @@ public class ImageListActivity extends AppCompatActivity {
             InImage.setLayoutParams(InImageParams);
             int InImageId = View.generateViewId();
             InImage.setId(InImageId);
+            InImage.setImageResource(R.drawable.loading);
             InLayout.addView(InImage);
 
             final TextView InText = new TextView(this);
@@ -104,6 +105,7 @@ public class ImageListActivity extends AppCompatActivity {
             int InTextId = View.generateViewId();
 
             InText.setId(InTextId);
+            InText.setText("Fetching image...");
             InLayout.addView(InText);
 
             OuterLayout.addView(InLayout);
