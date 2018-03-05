@@ -19,11 +19,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.lang.ref.Reference;
+
 public class MainActivity extends AppCompatActivity {
 
-    public static final String FETCH_TYPE = "com.cs316.smoresmemes.FETCHMETHOD";
-
-    final BitmapRef BaseImage = new BitmapRef();
+    final StrongReference<Bitmap> BaseImage = new StrongReference<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         ImageButton btnSave = (ImageButton) findViewById(R.id.saveButton);
         ImageButton btnShare = (ImageButton) findViewById(R.id.shareButton);
         final ImageView photoView = (ImageView) findViewById(R.id.memeView);
-        BaseImage.Bitmap = ((BitmapDrawable) photoView.getDrawable()).getBitmap();
+        BaseImage.set(((BitmapDrawable) photoView.getDrawable()).getBitmap());
 
         TextWatcher T = new MemeWatcher();
 
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent, CODES.GET_IMAGE_FROM_CAMERA);
+                startActivityForResult(intent, CODES.GET_CAMERA_BASE_IMAGE);
             }
         });
 
@@ -92,11 +92,11 @@ public class MainActivity extends AppCompatActivity {
                 // Create intent to Open Image applications like Gallery, Google Photos
                 Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 // Start the Intent
-                startActivityForResult(galleryIntent, CODES.GET_LOCAL_IMAGE);
+                startActivityForResult(galleryIntent, CODES.GET_LOCAL_BASE_IMAGE);
             }
         });
 
-
+        final Toast IfSuccessful = Toast.makeText(this, "Meme Genereated!", Toast.LENGTH_LONG);
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -117,40 +117,19 @@ public class MainActivity extends AppCompatActivity {
                 }
                 final EditText ET1 = (EditText) findViewById(R.id.topText);
                 final EditText ET2 = (EditText) findViewById(R.id.bottomText);
-                Bitmap FinalImage = ImageMod.applyText(BaseImage.Bitmap, ET1.getText().toString(), ET2.getText().toString(), getApplicationContext());
-                String ImagePath = MediaStore.Images.Media.insertImage(getContentResolver(),FinalImage,"generatedMeme","meme");
+                Bitmap FinalImage = ImageMod.applyText(BaseImage.get(), ET1.getText().toString(), ET2.getText().toString(), getApplicationContext());
+                String ImagePath = MediaStore.Images.Media.insertImage(getContentResolver(), FinalImage, "generatedMeme", "meme");
                 System.out.println(ImagePath);
+                IfSuccessful.show();
             }
         });
-
-        /*
-        final Map<String,String> Data = new HashMap<>();
-        Data.put("imageData", BitmapString);
-        Data.put("imageFormat", "JPG");
-        Data.put("imageWidth", Integer.toString(ImageBitmap.getWidth()));
-        Data.put("imageHeight", Integer.toString(ImageBitmap.getHeight()));
-
-        Runnable c = new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                String X = MyHTTP.POST("postmeme",Data);
-                //System.out.println("Results: " + X.trim().length() + " vs " + BitmapString.trim().length());
-                System.out.println("LENGTH: "+X);
-            }
-        };
-
-        Thread t = new Thread(c);
-        t.start();
-        //*/
     }
 
     private void ApplyTextAndDisplay() {
         final ImageView photoView = (ImageView) findViewById(R.id.memeView);
         final EditText ET1 = (EditText) findViewById(R.id.topText);
         final EditText ET2 = (EditText) findViewById(R.id.bottomText);
-        Bitmap myBitmap = BaseImage.Bitmap;
+        Bitmap myBitmap = BaseImage.get();
 
         String TopText = ET1.getText().toString();
         String BtmText = ET2.getText().toString();
@@ -165,16 +144,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case CODES.GET_IMAGE_FROM_CAMERA: {
+            case CODES.GET_CAMERA_BASE_IMAGE: {
                 if (resultCode == RESULT_OK && data != null && data.hasExtra("data")) {
                     Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-                    ImageView photoView = (ImageView) findViewById(R.id.memeView);
-                    BaseImage.Bitmap = bitmap;
+                    BaseImage.set(bitmap);
                     ApplyTextAndDisplay();
                 }
                 break;
             }
-            case CODES.GET_LOCAL_IMAGE: {
+            case CODES.GET_LOCAL_BASE_IMAGE: {
                 if (resultCode == RESULT_OK && data != null) {
                     Uri selectedImage = data.getData();
                     String[] filePathColumn = {MediaStore.Images.Media.DATA};
@@ -191,19 +169,19 @@ public class MainActivity extends AppCompatActivity {
 
                     // Set the Image in ImageView after decoding the String
                     Bitmap FromString = BitmapFactory.decodeFile(imgDecodableString);
-                    BaseImage.Bitmap = FromString;
+                    BaseImage.set(FromString);
                     ApplyTextAndDisplay();
                 } else {
-                    Toast.makeText(this, "You haven't picked Image", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(this, "You haven't picked Image", Toast.LENGTH_LONG).show();
                 }
                 break;
             }
-            case CODES.DB_FETCH_IMAGE: {
+            case CODES.GET_DATABASE_BASE_IMAGE: {
                 if (resultCode == RESULT_OK && data != null) {
                     byte[] DataBytes = (byte[]) data.getExtras().get(ImageListActivity.FETCH_RESULT);
                     Bitmap bitmap = BitmapFactory.decodeByteArray(DataBytes, 0, DataBytes.length);
                     ImageView photoView = (ImageView) findViewById(R.id.memeView);
-                    BaseImage.Bitmap = bitmap;
+                    BaseImage.set(bitmap);
                     ApplyTextAndDisplay();
                 }
                 break;
@@ -217,8 +195,8 @@ public class MainActivity extends AppCompatActivity {
     public void gotoDownloadBaseImage() {
         final int NUM_IMAGES = 20;
         Intent intent = new Intent(this, ImageListActivity.class);
-        intent.putExtra(FETCH_TYPE, "base 20");
-        startActivityForResult(intent, CODES.DB_FETCH_IMAGE);
+        intent.putExtra(CODES.FETCH_METHOD, "base 20");
+        startActivityForResult(intent, CODES.GET_DATABASE_BASE_IMAGE);
     }
 
     public void gotoMemeShare() {
@@ -244,18 +222,14 @@ public class MainActivity extends AppCompatActivity {
     }
 }
 
-class BitmapRef {
-    public Bitmap Bitmap;
-}
-
-class ObjectHolder<T> {
+class StrongReference<T> {
     private T _me;
 
-    public ObjectHolder() {
+    public StrongReference() {
         set(null);
     }
 
-    public ObjectHolder(T obj) {
+    public StrongReference(T obj) {
         set(obj);
     }
 

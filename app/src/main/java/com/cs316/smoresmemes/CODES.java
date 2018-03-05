@@ -1,17 +1,18 @@
 package com.cs316.smoresmemes;
 
-/**
- * Created by sebmansigh on 3/5/18.
- */
 
 final class CODES {
 
-    public static final int PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
-    public static final int PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 2;
+    static final int PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
+    static final int PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 2;
 
-    public static final int GET_IMAGE_FROM_CAMERA = 0;
-    public static final int GET_LOCAL_IMAGE = 1;
-    public static final int DB_FETCH_IMAGE = 1000;
+    static final int GET_CAMERA_BASE_IMAGE = 100;
+    static final int GET_LOCAL_BASE_IMAGE = 200;
+    static final int GET_LOCAL_FULL_MEME = 201;
+    static final int GET_DATABASE_BASE_IMAGE = 300;
+
+
+    public static final String FETCH_METHOD = "com.cs316.smoresmemes.FETCHMETHOD";
 
     private CODES() {
     }

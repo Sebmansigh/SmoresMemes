@@ -1,5 +1,6 @@
 package com.cs316.smoresmemes;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,15 +9,19 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Base64;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.lang.ref.Reference;
 import java.util.ArrayList;
@@ -29,35 +34,43 @@ import java.util.Set;
 public class ImageListActivity extends AppCompatActivity {
     public static final String FETCH_RESULT = "com.cs316.smoresmemes.FETCHRESULT";
 
+    private final StrongReference<String> FetchMethod = new StrongReference<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_list);
         // Get the Intent that started this activity and extract the string
         Intent intent = getIntent();
-        String[] fetchData = intent.getStringExtra(MainActivity.FETCH_TYPE).split(" ");
+        String[] fetchData = intent.getStringExtra(CODES.FETCH_METHOD).split(" ");
 
-        String method = fetchData[0];
+        final String method = fetchData[0];
+        FetchMethod.set(method);
+
+        final String calling;
         switch (method) {
             case "base": {
-                method = "getBaseMemeIDs";
+                calling = "getBaseMemeIDs";
                 break;
             }
+            case "full": {
+                calling = "getFullMemeIDs";
+                break;
+            }
+
             default: {
-                throw new IllegalStateException("Invalid fetch type parameter");
+                throw new IllegalStateException("Invalid parameter " + CODES.FETCH_METHOD);
             }
         }
-        System.out.println("ABOUT TO CALL " + method);
-        final String inMethod = method;
+        System.out.println("ABOUT TO CALL " + calling);
         final Map<String, String> Data = new HashMap<>();
         Data.put("amount", fetchData[1]);
 
-        final ObjectHolder<String[]> Ref = new ObjectHolder<>();
+        final StrongReference<String[]> Ref = new StrongReference<>();
 
         Runnable d = new Runnable() {
             @Override
             public void run() {
-                String[] idArr = MyHTTP.POST(inMethod, Data).split("\n");
+                String[] idArr = MyHTTP.POST(calling, Data).split("\n");
                 Ref.set(idArr);
             }
         };
@@ -87,11 +100,19 @@ public class ImageListActivity extends AppCompatActivity {
 
             final Map<String, String> InData = new HashMap<>();
             InData.put("id", IDStr);
-            final byte[][] InDataBytes = new byte[1][];
+
+            final StrongReference<byte[]> InDataBytes = new StrongReference<>();
+            final StrongReference<String> InString = new StrongReference<>();
+
             Runnable InR = new Runnable() {
                 @Override
                 public void run() {
-                    final String X = MyHTTP.POST("getbasememeimage", InData);
+                    String X = null;
+                    if (method.equals("base")) {
+                        X = MyHTTP.POST("getBaseMemeImage", InData);
+                    } else if (method.equals("full")) {
+                        X = MyHTTP.POST("getFullMemeImage", InData);
+                    }
                     byte[] DataBytes = Base64.decode(X.trim(), Base64.DEFAULT);
                     final Bitmap FromData = BitmapFactory.decodeByteArray(DataBytes, 0, DataBytes.length);
                     runOnUiThread(new Runnable() //run on ui thread
@@ -100,8 +121,13 @@ public class ImageListActivity extends AppCompatActivity {
                             InImage.setImageBitmap(FromData);
                         }
                     });
-                    InData.put("description", MyHTTP.POST("getbasememedescription", InData));
-                    InDataBytes[0] = DataBytes;
+                    if (method.equals("base")) {
+                        X = MyHTTP.POST("getBaseMemeDescription", InData);
+                    } else if (method.equals("full")) {
+                        X = "Uploaded by: " + MyHTTP.POST("getFullMemeUploadedBy", InData);
+                    }
+                    InString.set(X);
+                    InDataBytes.set(DataBytes);
                 }
             };
 
@@ -123,20 +149,52 @@ public class ImageListActivity extends AppCompatActivity {
                 InThread.join();
             } catch (InterruptedException e) {
             }
-            InText.setText(InData.get("description"));
+            InText.setText(InString.get());
 
-            System.out.println("CLICK SET!");
-            InLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    System.out.println("CLICK GET!");
-                    Intent resultIntent = new Intent();
-                    resultIntent.putExtra(FETCH_RESULT, InDataBytes[0]);
-                    setResult(RESULT_OK, resultIntent);
-                    finish();
-                }
+            if (method.equals("base")) {
+                InLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent resultIntent = new Intent();
+                        resultIntent.putExtra(FETCH_RESULT, InDataBytes.get());
+                        setResult(RESULT_OK, resultIntent);
+                        finish();
+                    }
 
-            });
+                });
+            } else if (method.equals("full")) {
+                final ImageListActivity thisActivity = this;
+                final Toast IfSuccessful = Toast.makeText(this, "Meme Saved!", Toast.LENGTH_LONG);
+                InLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        final AlertDialog.Builder builder = new AlertDialog.Builder(thisActivity);
+                        builder.setTitle("Save Meme?");
+
+                        final TextView input = new TextView(thisActivity);
+                        builder.setView(input);
+
+
+                        builder.setPositiveButton("Download", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //UploadBaseImage(B, input.getText().toString());
+                                IfSuccessful.show();
+                            }
+                        });
+                        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+
+                        builder.show();
+                    }
+
+                });
+            }
         }
     }
 }
