@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">SmoresMemes</string>
     <string name="title_activity_meme_repo">MemeRepoActivity</string>
+    <string name="title_activity_image">ImageActivity</string>
 </resources>

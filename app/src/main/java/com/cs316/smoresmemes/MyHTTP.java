@@ -93,6 +93,8 @@ public final class MyHTTP {
 
 
                 throw new PHPErrorException(error);
+            } finally {
+                connection.disconnect();
             }
         } catch (Exception e) {
 

@@ -21,9 +21,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MemeRepoActivity"
-            android:label="@string/title_activity_meme_repo"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:name=".ImageActivity"
+            android:label="@string/title_activity_image"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.cs316.smoresmemes.MainActivity" />
+        </activity>
+        <activity android:name=".ImageListActivity"></activity>
     </application>
 
 </manifest>

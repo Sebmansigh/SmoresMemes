@@ -57,10 +57,10 @@ final class ImageMod {
         Typeface T = ResourcesCompat.getFont(c, R.font.impact);
         paint.setTypeface(T);
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(24);
+        paint.setStrokeWidth(FONT_SIZE / 8);
         paint.setColor(Color.BLACK);
         paint.setTextSize(FONT_SIZE);
-        paint.setShadowLayer(40f, 0f, 1f, Color.BLACK);
+        paint.setShadowLayer(FONT_SIZE / 16.0f, 0f, 0f, Color.BLACK);
 
         // draw text to the Canvas center
         Rect bounds = new Rect();
@@ -77,10 +77,10 @@ final class ImageMod {
         // Bottom Text
         paint.getTextBounds(BtmText, 0, BtmText.length(), bounds);
         int x2 = (myBitmap.getWidth() - bounds.width()) / 2;
-        int y2 = myBitmap.getHeight() - y / 2;
+        int y2 = myBitmap.getHeight() - FONT_SIZE / 4;
 
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(24);
+        paint.setStrokeWidth(FONT_SIZE / 8);
         paint.setColor(Color.BLACK);
         canvas.drawText(BtmText, x2, y2, paint);
 

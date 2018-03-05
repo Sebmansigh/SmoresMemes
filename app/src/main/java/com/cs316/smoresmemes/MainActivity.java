@@ -21,8 +21,12 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
-    private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 2;
+    private static final int PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
+    private static final int PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 2;
+
+    public static final int FETCH_IMAGE = 1000;
+
+    public static final String FETCH_TYPE = "com.cs316.smoresmemes.FETCHMETHOD";
 
     final BitmapRef BaseImage = new BitmapRef();
 
@@ -31,43 +35,39 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final EditText ET1 = (EditText) findViewById(R.id.editText);
+        final EditText ET1 = (EditText) findViewById(R.id.topText);
         final EditText ET2 = (EditText) findViewById(R.id.bottomText);
 
         ImageButton btnCamera = (ImageButton) findViewById(R.id.takePhotoButton);
+        ImageButton btnDownload = (ImageButton) findViewById(R.id.downloadBaseButton);
+        ImageButton btnGallery = (ImageButton) findViewById(R.id.galleryButton);
+        ImageButton btnSave = (ImageButton) findViewById(R.id.saveButton);
         final ImageView photoView = (ImageView) findViewById(R.id.memeView);
         BaseImage.Bitmap = ((BitmapDrawable) photoView.getDrawable()).getBitmap();
 
-        TextWatcher T = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                ApplyTextAndDisplay();
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        };
+        TextWatcher T = new MemeWatcher();
 
         ET1.addTextChangedListener(T);
         ET2.addTextChangedListener(T);
 
 
         btnCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(intent,0);
             }
         });
 
-        ImageButton btnGallery = (ImageButton) findViewById(R.id.galleryButton);
+        btnDownload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                gotoDownloadBaseImage();
+            }
+        });
+
         btnGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View view) {
                 //confirm that we have permissions to access photos
                 if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
                     //    // Explain to the user why we need to read the contacts
                     //}
                     requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                            MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                            PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
 
                     // MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE is an
                     // app-defined int constant that should be quite unique
@@ -93,9 +93,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ImageButton saveImage = (ImageButton) findViewById(R.id.saveButton);
 
-        saveImage.setOnClickListener(new View.OnClickListener() {
+        btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -108,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                            MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+                            PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
 
 
                     return;
@@ -168,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void ApplyTextAndDisplay() {
         final ImageView photoView = (ImageView) findViewById(R.id.memeView);
-        final EditText ET1 = (EditText) findViewById(R.id.editText);
+        final EditText ET1 = (EditText) findViewById(R.id.topText);
         final EditText ET2 = (EditText) findViewById(R.id.bottomText);
         Bitmap myBitmap = BaseImage.Bitmap;
 
@@ -184,36 +183,81 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
-            Uri selectedImage = data.getData();
-            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
+                if (resultCode == RESULT_OK && data != null) {
+                    Uri selectedImage = data.getData();
+                    String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
-            // Get the cursor
-            Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+                    // Get the cursor
+                    Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
 
-            // Move to first row
-            cursor.moveToFirst();
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String imgDecodableString = cursor.getString(columnIndex);
-            cursor.close();
-            ImageView imgView = (ImageView) findViewById(R.id.memeView);
+                    // Move to first row
+                    cursor.moveToFirst();
+                    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                    String imgDecodableString = cursor.getString(columnIndex);
+                    cursor.close();
+                    ImageView imgView = (ImageView) findViewById(R.id.memeView);
 
-            // Set the Image in ImageView after decoding the String
-            Bitmap FromString = BitmapFactory.decodeFile(imgDecodableString);
-            BaseImage.Bitmap = FromString;
-            ApplyTextAndDisplay();
-        } else if (requestCode == 1) {
-            Toast.makeText(this, "You haven't picked Image", Toast.LENGTH_LONG).show();
-        }
-        if (data != null && data.hasExtra("data")) {
-            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-            ImageView photoView = (ImageView) findViewById(R.id.memeView);
-            BaseImage.Bitmap = bitmap;
-            ApplyTextAndDisplay();
+                    // Set the Image in ImageView after decoding the String
+                    Bitmap FromString = BitmapFactory.decodeFile(imgDecodableString);
+                    BaseImage.Bitmap = FromString;
+                    ApplyTextAndDisplay();
+                } else {
+                    Toast.makeText(this, "You haven't picked Image", Toast.LENGTH_LONG).show();
+                }
+                if (data != null && data.hasExtra("data")) {
+                    Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+                    ImageView photoView = (ImageView) findViewById(R.id.memeView);
+                    BaseImage.Bitmap = bitmap;
+                    ApplyTextAndDisplay();
+                }
+                break;
+            }
+            case FETCH_IMAGE: {
+                if (resultCode == RESULT_OK && data != null) {
+                    byte[] DataBytes = (byte[]) data.getExtras().get(ImageListActivity.FETCH_RESULT);
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(DataBytes, 0, DataBytes.length);
+                    ImageView photoView = (ImageView) findViewById(R.id.memeView);
+                    BaseImage.Bitmap = bitmap;
+                    ApplyTextAndDisplay();
+                }
+                break;
+            }
+            default: {
+                System.out.println("Unknown request code:" + requestCode);
+            }
         }
     }
 
+    public void gotoDownloadBaseImage() {
+        final int NUM_IMAGES = 20;
+        Intent intent = new Intent(this, ImageListActivity.class);
+        intent.putExtra(FETCH_TYPE, "base 20");
+        startActivityForResult(intent, FETCH_IMAGE);
+    }
+
+
+
+
     private class BitmapRef {
         public Bitmap Bitmap;
+    }
+
+    private class MemeWatcher implements TextWatcher {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            ApplyTextAndDisplay();
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
     }
 }
