@@ -51,12 +51,14 @@ public class ImageListActivity extends AppCompatActivity {
         final String inMethod = method;
         final Map<String, String> Data = new HashMap<>();
         Data.put("amount", fetchData[1]);
-        final String[][] ArrayRef = new String[1][]; //Exists because Java closures are dumb and I don't want to write a pointer class.
+
+        final ObjectHolder<String[]> Ref = new ObjectHolder<>();
+
         Runnable d = new Runnable() {
             @Override
             public void run() {
                 String[] idArr = MyHTTP.POST(inMethod, Data).split("\n");
-                ArrayRef[0] = idArr;
+                Ref.set(idArr);
             }
         };
         Thread t = new Thread(d);
@@ -67,7 +69,7 @@ public class ImageListActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
         }
         final LinearLayout OuterLayout = (LinearLayout) findViewById(R.id.outerLayout);
-        for (final String IDStr : ArrayRef[0]) {
+        for (final String IDStr : Ref.get()) {
             final LinearLayout InLayout = new LinearLayout(this);
             final LinearLayout.LayoutParams InLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 216);
             InLayout.setLayoutParams(InLayoutParams);

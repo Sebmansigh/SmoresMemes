@@ -21,11 +21,6 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
-    private static final int PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 2;
-
-    public static final int FETCH_IMAGE = 1000;
-
     public static final String FETCH_TYPE = "com.cs316.smoresmemes.FETCHMETHOD";
 
     final BitmapRef BaseImage = new BitmapRef();
@@ -56,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent,0);
+                startActivityForResult(intent, CODES.GET_IMAGE_FROM_CAMERA);
             }
         });
 
@@ -64,6 +59,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 gotoDownloadBaseImage();
+            }
+        });
+
+        btnShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                gotoMemeShare();
             }
         });
 
@@ -79,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                     //    // Explain to the user why we need to read the contacts
                     //}
                     requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                            PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                            CODES.PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
 
                     // MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE is an
                     // app-defined int constant that should be quite unique
@@ -90,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
                 // Create intent to Open Image applications like Gallery, Google Photos
                 Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 // Start the Intent
-                startActivityForResult(galleryIntent, 1);
+                startActivityForResult(galleryIntent, CODES.GET_LOCAL_IMAGE);
             }
         });
 
@@ -108,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                            PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+                            CODES.PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
 
 
                     return;
@@ -142,30 +144,6 @@ public class MainActivity extends AppCompatActivity {
         Thread t = new Thread(c);
         t.start();
         //*/
-        /*
-        final Map<String, String> Data2 = new HashMap<>();
-        Data2.put("id", "65");
-        final ImageView FinalView = photoView;
-        Runnable d = new Runnable() {
-            @Override
-            public void run() {
-                final String X = MyHTTP.POST("getmeme", Data2);
-                runOnUiThread(new Runnable() //run on ui thread
-                {
-                    public void run() {
-                        byte[] DataBytes = Base64.decode(X.trim(), Base64.DEFAULT);
-                        Bitmap FromData = BitmapFactory.decodeByteArray(DataBytes, 0, DataBytes.length);
-                        FinalView.setImageBitmap(FromData);
-                        BaseImage.Bitmap = FromData;
-                        ApplyTextAndDisplay();
-
-                    }
-                });
-            }
-        };
-        new Thread(d).start();
-        */
-        //*/
     }
 
     private void ApplyTextAndDisplay() {
@@ -187,7 +165,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
+            case CODES.GET_IMAGE_FROM_CAMERA: {
+                if (resultCode == RESULT_OK && data != null && data.hasExtra("data")) {
+                    Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+                    ImageView photoView = (ImageView) findViewById(R.id.memeView);
+                    BaseImage.Bitmap = bitmap;
+                    ApplyTextAndDisplay();
+                }
+                break;
+            }
+            case CODES.GET_LOCAL_IMAGE: {
                 if (resultCode == RESULT_OK && data != null) {
                     Uri selectedImage = data.getData();
                     String[] filePathColumn = {MediaStore.Images.Media.DATA};
@@ -209,15 +196,9 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(this, "You haven't picked Image", Toast.LENGTH_LONG).show();
                 }
-                if (data != null && data.hasExtra("data")) {
-                    Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-                    ImageView photoView = (ImageView) findViewById(R.id.memeView);
-                    BaseImage.Bitmap = bitmap;
-                    ApplyTextAndDisplay();
-                }
                 break;
             }
-            case FETCH_IMAGE: {
+            case CODES.DB_FETCH_IMAGE: {
                 if (resultCode == RESULT_OK && data != null) {
                     byte[] DataBytes = (byte[]) data.getExtras().get(ImageListActivity.FETCH_RESULT);
                     Bitmap bitmap = BitmapFactory.decodeByteArray(DataBytes, 0, DataBytes.length);
@@ -237,14 +218,12 @@ public class MainActivity extends AppCompatActivity {
         final int NUM_IMAGES = 20;
         Intent intent = new Intent(this, ImageListActivity.class);
         intent.putExtra(FETCH_TYPE, "base 20");
-        startActivityForResult(intent, FETCH_IMAGE);
+        startActivityForResult(intent, CODES.DB_FETCH_IMAGE);
     }
 
-
-
-
-    private class BitmapRef {
-        public Bitmap Bitmap;
+    public void gotoMemeShare() {
+        Intent intent = new Intent(this, MemeShareActivity.class);
+        startActivity(intent);
     }
 
     private class MemeWatcher implements TextWatcher {
@@ -262,5 +241,29 @@ public class MainActivity extends AppCompatActivity {
         public void afterTextChanged(Editable editable) {
 
         }
+    }
+}
+
+class BitmapRef {
+    public Bitmap Bitmap;
+}
+
+class ObjectHolder<T> {
+    private T _me;
+
+    public ObjectHolder() {
+        set(null);
+    }
+
+    public ObjectHolder(T obj) {
+        set(obj);
+    }
+
+    public void set(T obj) {
+        _me = obj;
+    }
+
+    public T get() {
+        return _me;
     }
 }

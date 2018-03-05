@@ -35,7 +35,7 @@ final class ImageMod {
     public static byte[] getBitmapByteArray(Bitmap B) {
         Bitmap JPG = B.copy(B.getConfig(), false);
         ByteArrayOutputStream o = new ByteArrayOutputStream();
-        B.compress(Bitmap.CompressFormat.JPEG, 0, o);
+        B.compress(Bitmap.CompressFormat.JPEG, 90, o);
         return o.toByteArray();
     }
 
